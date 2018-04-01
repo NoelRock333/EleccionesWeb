@@ -1,7 +1,7 @@
-var express = require('express');
-var router = express.Router();
-var knex = require('../knex');
-var SHA256 = require('crypto-js/sha256');
+const express = require('express');
+const router = express.Router();
+const knex = require('../knex');
+const SHA256 = require('crypto-js/sha256');
 
 /* GET users listing. */
 router.get('/', function(req, res, next) {
