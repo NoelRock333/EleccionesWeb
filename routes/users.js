@@ -2,6 +2,7 @@ const express = require('express');
 const router = express.Router();
 const knex = require('../knex');
 const SHA256 = require('crypto-js/sha256');
+const authToken = require('../lib/auth-token');
 
 /* GET users listing. */
 router.get('/', function(req, res, next) {
@@ -36,7 +37,11 @@ router.post('/login', function(req, res, next) {
     .then(function(data) {
       var password_hash = SHA256(req.body.password).toString();
       if (password_hash == data.password_hash) {
-        res.send('Password correcto');
+        var token = authToken.encode({
+          email: data.email,
+          user_id: data.id
+        });
+        res.send('Password correcto: ' + token);
       } else {
         res.send('Password incorrecto');
       }
