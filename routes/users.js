@@ -35,15 +35,19 @@ router.post('/login', function(req, res, next) {
     .where('email', '=', req.body.email)
     .first()
     .then(function(data) {
-      var password_hash = SHA256(req.body.password).toString();
-      if (password_hash == data.password_hash) {
-        var token = authToken.encode({
-          email: data.email,
-          user_id: data.id
-        });
-        res.send('Password correcto: ' + token);
+      if (data) {
+        var password_hash = SHA256(req.body.password).toString();
+        if (password_hash == data.password_hash) {
+          var token = authToken.encode({
+            email: data.email,
+            user_id: data.id
+          });
+          res.json({ jwt: token });
+        } else {
+          res.send('Password incorrecto');
+        }
       } else {
-        res.send('Password incorrecto');
+        return res.status(401);
       }
     });
 })
